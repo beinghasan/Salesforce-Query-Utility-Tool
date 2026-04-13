@@ -7,7 +7,6 @@ A Lightning Web Component that lets admins and developers compose, run, and insp
 
 <img width="2888" height="1086" alt="image" src="https://github.com/user-attachments/assets/cf00ea17-4f55-473c-b7fc-2531c1372171" />
 
-
 ## Features
 
 - SOQL input editor with debounced validation (client-side syntax hints where applicable)
@@ -16,6 +15,20 @@ A Lightning Web Component that lets admins and developers compose, run, and insp
 - Basic error surfacing from Apex/Query parser
 - Minimalist styling aligned with SLDS
 - Tab registration available via `SOQL_Explorer.tab-meta.xml` (navigate from the custom tab)
+
+## Screenshots
+
+Search Object
+<img width="2888" height="1086" alt="image" src="https://github.com/user-attachments/assets/e661261c-bf47-4c3e-a173-37f0a11da873" />
+
+Select fields
+<img width="2888" height="1086" alt="image" src="https://github.com/user-attachments/assets/ef1d2bc5-39ad-4ac4-90c6-c4f5c3e19eed" />
+
+Manually add WHERE clause and extra fields in SOQL Query textbox
+<img width="2018" height="1252" alt="image" src="https://github.com/user-attachments/assets/c99919c1-9c54-4acb-8c54-cae88ecb5809" />
+
+After click on Run Query, result will appear like below
+<img width="2016" height="1106" alt="image" src="https://github.com/user-attachments/assets/00d2db42-f3de-4766-b1b9-a110dd45aabb" />
 
 ## Repository Locations
 
