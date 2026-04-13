@@ -5,6 +5,9 @@ Tool for querying in Salesforce Org
 
 A Lightning Web Component that lets admins and developers compose, run, and inspect SOQL queries directly in the Salesforce UI. It provides a lightweight query editor with result rendering and basic UX helpers.
 
+<img width="2888" height="1086" alt="image" src="https://github.com/user-attachments/assets/cf00ea17-4f55-473c-b7fc-2531c1372171" />
+
+
 ## Features
 
 - SOQL input editor with debounced validation (client-side syntax hints where applicable)
