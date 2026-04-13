@@ -9,12 +9,16 @@ A Lightning Web Component that lets admins and developers compose, run, and insp
 
 ## Features
 
-- SOQL input editor with debounced validation (client-side syntax hints where applicable)
-- Execute query against server via Apex controller (`SoqlExplorerController`)
-- Result table rendering with dynamic columns
-- Basic error surfacing from Apex/Query parser
-- Minimalist styling aligned with SLDS
-- Tab registration available via `SOQL_Explorer.tab-meta.xml` (navigate from the custom tab)
+- SOQL Input Editor: High-performance code editor featuring debounced syntax validation and real-time query hints.
+- Server-Side Execution: Seamless integration with a custom Apex controller to execute dynamic SOQL directly against the database.
+- Dynamic Data Table: Adaptive UI that automatically maps server-side results to interactive, dynamic table columns.
+- Error Handling: Robust error surfacing providing descriptive feedback from both the client-side parser and server-side Apex exceptions.
+- SLDS Design: User interface strictly aligned with the Salesforce Lightning Design System for a native and intuitive experience.
+- Data Portability: Integrated "Export to Excel" and "Copy to Clipboard" tools for effortless external data management.
+- Record Management: Native support for single-row and bulk record deletion with built-in safety confirmation protocols.
+- Data Navigation: Advanced result-set management featuring configurable pagination and real-time global search filters.
+- Query Persistence: Smart history and favorite repository that stores up to 20 queries using a FIFO management logic.
+- Flexible Deployment: Enterprise-ready configuration enabling accessibility via Custom Tabs, Utility Bars, or App Pages.
 
 ## Screenshots
 
