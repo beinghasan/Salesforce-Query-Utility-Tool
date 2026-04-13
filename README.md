@@ -26,7 +26,7 @@ Search Object
 <img width="2022" height="696" alt="image" src="https://github.com/user-attachments/assets/05cf9ffc-9b95-40df-9409-3f6859008355" />
 
 Select fields
-<img width="2888" height="1086" alt="image" src="https://github.com/user-attachments/assets/ef1d2bc5-39ad-4ac4-90c6-c4f5c3e19eed" />
+<img width="2020" height="856" alt="image" src="https://github.com/user-attachments/assets/4ffe9b44-4ee6-4ddc-85cd-ba5a7e60049b" />
 
 Manually add WHERE clause and extra fields in SOQL Query textbox
 <img width="2018" height="1252" alt="image" src="https://github.com/user-attachments/assets/c99919c1-9c54-4acb-8c54-cae88ecb5809" />
