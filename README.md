@@ -19,7 +19,7 @@ A Lightning Web Component that lets admins and developers compose, run, and insp
 ## Screenshots
 
 Search Object
-<img width="2888" height="1086" alt="image" src="https://github.com/user-attachments/assets/e661261c-bf47-4c3e-a173-37f0a11da873" />
+<img width="2022" height="696" alt="image" src="https://github.com/user-attachments/assets/05cf9ffc-9b95-40df-9409-3f6859008355" />
 
 Select fields
 <img width="2888" height="1086" alt="image" src="https://github.com/user-attachments/assets/ef1d2bc5-39ad-4ac4-90c6-c4f5c3e19eed" />
