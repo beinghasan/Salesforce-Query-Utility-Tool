@@ -28,10 +28,10 @@ Search Object
 Select fields
 <img width="2020" height="856" alt="image" src="https://github.com/user-attachments/assets/4ffe9b44-4ee6-4ddc-85cd-ba5a7e60049b" />
 
-Manually add WHERE clause and extra fields in SOQL Query textbox
+Manually add WHERE clause and extra fields (Like relationship if required) in SOQL Query textbox
 <img width="2018" height="1252" alt="image" src="https://github.com/user-attachments/assets/c99919c1-9c54-4acb-8c54-cae88ecb5809" />
 
-After click on Run Query, result will appear like below
+After click on Run Query, result will appear as below
 <img width="2016" height="1106" alt="image" src="https://github.com/user-attachments/assets/00d2db42-f3de-4766-b1b9-a110dd45aabb" />
 
 ## Repository Locations
