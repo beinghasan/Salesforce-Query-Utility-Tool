@@ -1,5 +1,5 @@
 # Salesforce-Query-Utility-Tool
-Tool for querying in Salesforce Org
+Smart Tool for query data in Salesforce Org
 
 # SOQL Explorer (LWC)
 
