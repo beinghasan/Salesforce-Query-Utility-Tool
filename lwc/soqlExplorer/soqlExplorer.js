@@ -137,12 +137,12 @@ export default class QueryUtility extends NavigationMixin(LightningElement) {
     // Handle selection from dropdowns
     handleHistorySelect(event) {
         this.soqlText = event.detail.value;
-        this.addToHistory(this.soqlText); // Move it to top because it was used
+        //this.addToHistory(this.soqlText); // Move it to top because it was used
     }
 
     handleSavedSelect(event) {
         this.soqlText = event.detail.value;
-        this.addToHistory(this.soqlText); // Also add to history when used
+        //this.addToHistory(this.soqlText); // Also add to history when used
     }
 
     // Delete Saved Query Logic
@@ -328,7 +328,7 @@ export default class QueryUtility extends NavigationMixin(LightningElement) {
 
     handleWhereChange(event) {
         const newWhereClause = event.detail.value;
-        if (this.whereClause.join(',') !== newWhereClause.join(',')) {
+        if (this.whereClause !== newWhereClause) {
             this.whereClause = newWhereClause;
             this.isSoqlManuallyEdited = false;
         }
