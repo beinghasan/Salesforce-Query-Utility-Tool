@@ -1,0 +1,240 @@
+<template>
+    <lightning-card icon-name='utility:summary'>
+        <span slot="title">Salesforce Query Utility Tool</span>
+
+        <div slot="actions" class="slds-grid slds-grid_vertical-align-center">
+            <lightning-button-menu icon-name="utility:clock" icon-position="left" label="Recent Queries"
+                onselect={handleHistorySelect} class="slds-m-right_small">
+                <template if:true={recentQueries.length}>
+                    <div class="menu-header-compact slds-border_bottom slds-grid slds-grid_align-center slds-p-vertical_xx-small">
+                        <button class="slds-button slds-button_neutral custom-mini-btn" onclick={handleClearAll}>
+                            <lightning-icon 
+                                icon-name="utility:delete" 
+                                size="xx-small" 
+                                class="slds-m-right_xxx-small custom-icon-red">
+                            </lightning-icon>
+                            <span>Clear All</span>
+                        </button>
+                    </div>
+                </template>
+                <template for:each={recentQueries} for:item="q">
+                    <lightning-menu-item key={q} label={q} value={q} title={q}></lightning-menu-item>
+                </template>
+                <template if:false={recentQueries.length}>
+                    <lightning-menu-item label="No recent history" disabled></lightning-menu-item>
+                </template>
+            </lightning-button-menu>
+
+            <lightning-button-menu icon-name="utility:favorite" icon-position="left" label="Saved Queries"
+                onselect={handleSavedSelect} menu-alignment="right">
+                <template for:each={savedQueries} for:item="sq">
+                    <div key={sq}
+                        class="slds-grid slds-grid_vertical-align-center slds-p-horizontal_x-small dropdown-item-wrapper"
+                        style="width: 100%;">
+                        <lightning-menu-item label={sq} value={sq} title={sq} class="slds-col"></lightning-menu-item>
+                        <lightning-button-icon icon-name="utility:delete" variant="bare" onclick={handleDeleteSaved}
+                            data-query={sq} alternative-text="Delete" title="Delete"
+                            class="red-icon slds-m-left_x-small">
+                        </lightning-button-icon>
+                    </div>
+                </template>
+                <template if:false={savedQueries.length}>
+                    <lightning-menu-item label="No saved queries" disabled></lightning-menu-item>
+                </template>
+            </lightning-button-menu>
+        </div>
+        <div class="slds-p-around_medium">
+            <!-- Object -->
+            <!--<lightning-combobox label="Object" options={objectOptions} value={selectedObject}
+                onchange={handleObjectChange}>
+            </lightning-combobox>-->
+            <!-- OBJECT SEARCH -->
+            <lightning-input type="search" label="Search Object" placeholder="Type object name..."
+                value={objectSearchKey} onchange={handleObjectSearch}>
+            </lightning-input>
+
+            <!-- SEARCH RESULTS -->
+            <template if:true={showObjectSearchResults}>
+                <div class="slds-box slds-m-top_x-small slds-scrollable_y" style="max-height: 200px">
+                    <template for:each={filteredObjects} for:item="obj">
+                        <div key={obj.apiName}
+                            class="slds-p-around_x-small slds-border_bottom slds-truncate slds-text-link"
+                            style="cursor: pointer;" onclick={selectObject} data-api={obj.apiName}>
+                            {obj.label} ({obj.apiName})
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Fields -->
+            <template if:true={isObjectSelected}>
+                <lightning-dual-listbox class="slds-m-top_medium" label="Fields" options={fieldOptions}
+                    value={selectedFields} onchange={handleFieldChange}>
+                </lightning-dual-listbox>
+            </template>
+
+            <!-- WHERE -->
+            <lightning-textarea class="slds-m-top_medium" label="Where Clause"
+                placeholder="Rating = 'Hot' AND Status = 'Active'" value={whereClause}
+                onchange={handleWhereChange}>
+            </lightning-textarea>
+
+            <!-- LIMIT -->
+            <lightning-input class="slds-m-top_medium" label="Limit (Max 50,000)" type="number" value={limitSize}
+                onchange={handleLimitChange}>
+            </lightning-input>
+            &nbsp;&nbsp;
+            <!-- SOQL BOX -->
+            <div class="slds-form-element soql-form">
+                <div class="label-row">
+                    <span id="soqlLabel" class="label-text">SOQL Query (Editable)</span>
+                    <lightning-button-icon class="save-btn" icon-name="utility:save" alternative-text="Save query"
+                        title="Save query" variant="bare" onclick={handleSaveCurrentQuery}>
+                    </lightning-button-icon>
+                </div>
+
+                <div class="slds-form-element__control control-row">
+                    <lightning-textarea class="soql-editor slds-m-top_none" value={soqlText}
+                        placeholder="SELECT Id FROM Account" onchange={handleSoqlChange} variant="label-hidden"
+                        aria-labelledby="soqlLabel" rows="4">
+                    </lightning-textarea>
+                </div>
+            </div>
+
+            <div class="slds-text-body_small slds-text-color_weak">
+                Supports ORDER BY, GROUP BY, HAVING, and aggregate functions (COUNT, SUM, AVG, MIN, MAX).
+                Use aliases for aggregate fields for better column names.
+            </div>
+            <!-- 🔴 ERROR MESSAGE -->
+            <template if:true={soqlErrorMessage}>
+                <div class="slds-text-color_error slds-m-top_medium">
+                    {soqlErrorMessage}
+                </div>
+            </template>
+            <!-- 🟠 WARNING MESSAGE -->
+            <template if:true={soqlWarningMessage}>
+                <div class="slds-text-color_warning slds-m-top_medium">
+                    <b>{soqlWarningMessage}</b>
+                </div>
+            </template>
+
+            <!-- RUN -->
+            <div class="slds-m-top_medium">
+                <lightning-button label="Run Query" variant="brand" onclick={runQuery} disabled={isRunDisabled}>
+                </lightning-button>
+            </div>
+
+            <!-- ✅ GLOBAL SEARCH (VISIBLE ONLY WHEN DATA EXISTS) -->
+            <template if:true={hasData}>
+                <div class="slds-m-top_large">
+                    <lightning-input type="search" label="Search results" placeholder="Search across all columns"
+                        onchange={handleGlobalSearch} class="slds-m-bottom_small">
+                    </lightning-input>
+                </div>
+
+                <!-- RESULTS -->
+                <div class="slds-m-top_large">
+                    <lightning-datatable key-field="Id" class="slds-m-top_large" data={tableData} columns={columns}
+                        show-row-number-column onrowselection={handleRowSelection} selected-rows={selectedRowIds}>
+                    </lightning-datatable>
+                </div>
+
+                <!-- ACTION BAR -->
+                <div class="slds-m-top_medium slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+
+                    <!-- LEFT: Copy + More Actions dropdown + Reset -->
+                    <div class="slds-grid slds-gutters slds-m-right_medium">
+                        <!-- Copy -->
+                        <div class="slds-col_auto slds-p-right_small">
+                            <lightning-button label="Copy" class="slds-p-left_small"
+                                onclick={handleCopy}></lightning-button>
+                        </div>
+
+                        <!-- Reset -->
+                        <div class="slds-col_auto slds-p-right_small">
+                            <lightning-button label="Reset" onclick={handleReset}></lightning-button>
+                        </div>
+
+                        <!-- More Actions dropdown: Export / Delete / Bulk Delete -->
+                        <div class="slds-col_auto slds-p-right_small">
+                            <lightning-button-menu alternative-text="More Actions" icon-name="utility:down"
+                                label="More Actions" onselect={handleMenuSelect}>
+                                <lightning-menu-item label="Export" value="export"></lightning-menu-item>
+                                <lightning-menu-item label="Delete" value="delete"
+                                    disabled={isDeleteDisabled}></lightning-menu-item>
+                                <lightning-menu-item label="Bulk Delete" value="bulkDelete"></lightning-menu-item>
+                            </lightning-button-menu>
+                        </div>
+                    </div>
+
+                    <!-- CENTER: PAGINATION (unchanged) -->
+                    <div class="slds-grid slds-grid_vertical-align-center">
+                        <lightning-button label="Previous" onclick={prevPage} disabled={disablePrev}></lightning-button>
+                        <lightning-button class="slds-m-left_small" label="Next" onclick={nextPage}
+                            disabled={disableNext}></lightning-button>
+                    </div>
+
+                    <!-- RIGHT: PAGE SIZE + COUNT (unchanged) -->
+                    <div class="slds-text-align_right">
+                        <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-end">
+                            <span class="slds-m-right_x-small">Records per page</span>
+                            <lightning-input type="number" variant="label-hidden" min="1" max={limitSize}
+                                value={pageSize} onchange={handlePageSizeChange} style="width:60px">
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-text-body_medium slds-m-top_x-small">
+                            Showing {startRecord}–{endRecord} of {totalRecords}
+                        </div>
+                    </div>
+
+                </div>
+
+            </template>
+
+            <div class="slds-m-top_large slds-text-align_center slds-text-body_small slds-text-color_weak">
+                <img src={iconLink} width="25" height="25" alt="Logo" class="slds-m-right_x-small" /><b>Developed By:&nbsp;
+                </b>
+                {developedBy}
+            </div>
+        </div>
+    </lightning-card>
+
+    <template if:true={showDeleteAllModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container">
+                <!-- Header -->
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">
+                        Confirm Delete All
+                    </h2>
+                </header>
+
+                <!-- Body -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <p>
+                        This will <strong>permanently delete all records </strong>
+                        returned by the current query.
+                    </p>
+                    <p class="slds-m-top_small">
+                        This action cannot be undone. Are you sure you want to continue?
+                    </p>
+                </div>
+
+                <!-- Footer -->
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={closeDeleteAllModal}>
+                    </lightning-button>
+
+                    <lightning-button variant="destructive" class="slds-m-left_small" label="Delete All"
+                        onclick={confirmDeleteAll}>
+                    </lightning-button>
+                </footer>
+            </div>
+        </section>
+
+        <!-- Backdrop -->
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

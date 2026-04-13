@@ -1,0 +1,139 @@
+/* container */
+.soql-form {
+  margin: 0;
+  padding: 0;
+}
+
+/* label row: Switch to flex and remove bottom padding */
+.label-row {
+  display: flex;         /* flex ensures it takes the full width */
+  align-items: center;   /* center for better alignment with the icon */
+  gap: 8px;
+  margin-bottom: 0 !important;
+  padding-bottom: 2px !important; /* tiny nudge for visual breathing room */
+}
+
+.label-text {
+  font-weight: 400;
+  font-size: 0.75rem;  /* Exact SLDS small size (13px) */
+  line-height: 1;        /* Tighten line height to remove invisible space */
+  color: inherit;
+  margin: 0;
+}
+
+/* control row: Remove all top spacing */
+.control-row {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  display: block;        /* ensure no inline spacing issues */
+}
+
+/* textarea: remove the SLDS default top margin on the form element */
+.soql-editor {
+  width: 100%;
+  margin-top: 0 !important;
+  --slds-c-textarea-spacing-block-start: 0; /* Modern SLDS styling hook */
+}
+
+/* Existing save-btn styles + Green Force */
+.save-btn {
+    --slds-c-button-icon-size: 30px;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* This hook forces the icon color to green */
+    --slds-c-icon-color-foreground: #1e6321; 
+}
+
+/* Optional: Darker green on hover for better UX */
+.save-btn:hover {
+    --slds-c-icon-color-foreground: #663280;
+}
+
+.label-row {
+    display: flex;
+    align-items: center; 
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.label-text {
+    font-weight: 400;
+    font-size: 0.75rem; /* 12px */
+    line-height: 1;
+    color: #3e3e3c;
+    margin: 0;
+}
+
+/* Re-enforcing the red color for the delete icon */
+.red-icon {
+    --slds-c-icon-color-foreground: #ff0000;
+}
+
+.red-icon:hover {
+    --slds-c-icon-color-foreground: #ba0517;
+}
+
+/* Ensure the wrapper takes full width so the delete icon stays right */
+.dropdown-item-wrapper {
+    width: 100%;
+    min-width: 250px;
+}
+
+/* Make sure long queries don't break the layout */
+lightning-menu-item {
+    max-width: 350px;
+    overflow: hidden;
+}
+/* Remove default menu padding at top/bottom */
+:host {
+    --slds-c-menu-list-spacing-block-start: 0;
+    --slds-c-menu-list-spacing-block-end: 0;
+}
+
+/* The header must span the full width to allow centering */
+.menu-header-compact {
+    background-color: #a7d7db;
+    width: 100%; 
+    display: flex;
+}
+
+.custom-mini-btn {
+    /* Reset dimensions to be extra small */
+    height: 1.25rem !important;
+    min-height: 1.25rem !important;
+    line-height: 1rem !important;
+    padding: 0 0.5rem !important;
+    font-size: 0.7rem !important;
+    min-width: auto !important;
+
+    /* Internal Alignment */
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    
+    /* Styling */
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    background: white;
+    cursor: pointer;
+}
+
+/* Tiny Red Icon */
+.custom-icon-red {
+    --slds-c-icon-color-foreground-default: #c23934;
+}
+
+.custom-icon-red :deep(svg) {
+    width: 0.7rem !important;
+    height: 0.7rem !important;
+}
+
+/* Remove hover blue glow if you want it strictly neutral */
+.custom-mini-btn:hover {
+    background-color: #f3f3f2;
+    border-color: #c23934;
+}
+
