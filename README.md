@@ -36,16 +36,16 @@ After click on Run Query, result will appear as below
 
 ## Repository Locations
 
-- Component bundle:
-  - `force-app/main/default/lwc/soqlExplorer/soqlExplorer.html`
-  - `force-app/main/default/lwc/soqlExplorer/soqlExplorer.js`
-  - `force-app/main/default/lwc/soqlExplorer/soqlExplorer.css`
-  - `force-app/main/default/lwc/soqlExplorer/soqlExplorer.js-meta.xml`
+- Lightning Web Component:
+  - [force-app/main/default/lwc/soqlExplorer/soqlExplorer.html](force-app/main/default/lwc/soqlExplorer/soqlExplorer.html)
+  - [force-app/main/default/lwc/soqlExplorer/soqlExplorer.js](force-app/main/default/lwc/soqlExplorer/soqlExplorer.js)
+  - [force-app/main/default/lwc/soqlExplorer/soqlExplorer.css](force-app/main/default/lwc/soqlExplorer/soqlExplorer.css)
+  - [force-app/main/default/lwc/soqlExplorer/soqlExplorer.js-meta.xml](force-app/main/default/lwc/soqlExplorer/soqlExplorer.js-meta.xml)
 - Apex controller:
-  - `force-app/main/default/classes/SoqlExplorerController.cls`
-  - `force-app/main/default/classes/SoqlExplorerController.cls-meta.xml`
-- Custom Tab (optional entry point):
-  - `force-app/main/default/tabs/SOQL_Explorer.tab-meta.xml`
+  - [force-app/main/default/classes/SoqlExplorerController.cls](force-app/main/default/classes/SoqlExplorerController.cls)
+  - [force-app/main/default/classes/SoqlExplorerController.cls-meta.xml](force-app/main/default/classes/SoqlExplorerController.cls-meta.xml)
+- Optional tab entry point:
+  - [force-app/main/default/tabs/SOQL_Explorer.tab-meta.xml](force-app/main/default/tabs/SOQL_Explorer.tab-meta.xml)
 
 ## Prerequisites
 
@@ -59,9 +59,14 @@ After click on Run Query, result will appear as below
 You can deploy the component and its controller with Salesforce CLI:
 
 - Deploy everything in the project (safest when unsure):
-  - `sf project deploy start`
+  ```bash
+  sf project deploy start
+  ```
+  
 - Or deploy only LWC + Apex for SOQL Explorer:
-  - `sf project deploy start --metadata "LightningComponentBundle:soqlExplorer,ApexClass:SoqlExplorerController,CustomTab:SOQL_Explorer"`
+  ```bash
+  sf project deploy start --metadata "LightningComponentBundle:soqlExplorer,ApexClass:SoqlExplorerController,CustomTab:SOQL_Explorer"
+  ```
 
 If you use permission sets, ensure the executing user has access to:
 - The `SoqlExplorerController` Apex class
