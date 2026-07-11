@@ -137,3 +137,120 @@ lightning-menu-item {
     border-color: #c23934;
 }
 
+.selected-field-highlight {
+    background-color: #e0f2fe !important;
+    font-weight: bold;
+}
+.hover-row:hover {
+    background-color: #f3f3f3;
+}
+
+/* Erase standard bottom margin from the label inside this specific row context */
+.slds-no-margin {
+    margin-bottom: 0 !important;
+}
+
+/* Custom Oval/Pill Shape Button Customizations */
+.custom-oval-btn {
+    border-radius: 10px !important; /* Forces the clean oval/pill styling edge */
+    height: 18px;                  /* Hard-caps height to match label line-height perfectly */
+    line-height: 16px;
+    padding: 0 6px;               /* Snugs the padding tight to keep layout compact */
+    font-size: 0.65rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /*background-color: #ffffff !important;
+    border: 1px solid #747474 !important;
+    color: #1b96ff !important; */      
+    transition: all 0.1s ease-in-out;
+}
+
+/* Match the internal icon fill color beautifully with standard neutral buttons */
+.custom-btn-icon {
+    --slds-c-icon-color-foreground: #1b96ff;
+
+    /* 2. Shrink the native 24px bounding box frame to sit nicely next to 0.65rem text */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 12px !important;
+    height: 12px !important;
+    
+    /* 3. Scale down the internal vector graphic smoothly */
+    transform: scale(0.65) !important;
+    transform-origin: center center !important;
+}
+
+/* Hover & Active/Click Interaction States */
+.custom-oval-btn:hover {
+    border-color: #1b96ff;
+    color: #1b96ff;
+}
+.custom-oval-btn:hover .custom-btn-icon {
+    --slds-c-icon-color-foreground: #1b96ff;
+}
+
+.custom-oval-btn:active {
+    transform: scale(0.95);
+    background-color: #f3f3f3;
+}
+
+/* Erase standard bottom margin from the header line inside this grid block context */
+.slds-no-margin {
+    margin-bottom: 0 !important;
+}
+
+/* Dummy spacer to match top row search footprint height perfectly */
+.spacer-height-match {
+    height: 26px; 
+    visibility: hidden;
+}
+
+/* Base structural layout parameters for both list row label sections */
+.inline-header-container {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    height: 18px; 
+}
+
+.title-label {
+    margin-bottom: 0 !important;
+    white-space: nowrap;
+    flex-shrink: 1;
+}
+
+/* Horizontal Checklist Squeeze metrics */
+.custom-checkbox-row {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap !important;
+}
+
+.micro-checkbox-lbl {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.625rem !important; 
+    font-weight: 700;
+    color: #3e3e3c;
+    margin-left: 8px !important;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.raw-cb {
+    margin: 0 3px 0 0 !important;
+    width: 11px;
+    height: 11px;
+    cursor: pointer;
+}
+
+.search-field-input-stretched .slds-input {
+    height: 26px !important;
+    line-height: 26px !important;
+    font-size: 0.75rem !important;
+    border-radius: 4px !important;
+    margin: 0 0 3px 0
+}
