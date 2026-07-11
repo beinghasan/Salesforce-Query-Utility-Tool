@@ -13,8 +13,16 @@ public with sharing class SoqlExplorerController {
     public class FieldInfo {
         @AuraEnabled public String label;
         @AuraEnabled public String apiName;
-        public FieldInfo(String l, String a) {
-            label = l; apiName = a;
+        @AuraEnabled public Boolean isLookup;
+        @AuraEnabled public String relationshipName;
+        @AuraEnabled public String referenceTo; // Stores target parent API Name
+
+        public FieldInfo(String l, String a, Boolean isL, String rName, String refTo) {
+            this.label = l; 
+            this.apiName = a;
+            this.isLookup = isL;
+            this.relationshipName = rName;
+            this.referenceTo = refTo;
         }
     }
 
@@ -37,16 +45,30 @@ public with sharing class SoqlExplorerController {
     @AuraEnabled(cacheable=true)
     public static List<FieldInfo> getFields(String objectName) {
         List<FieldInfo> res = new List<FieldInfo>();
-        Schema.SObjectType obj =
-            Schema.getGlobalDescribe().get(objectName);
+        Schema.SObjectType obj = Schema.getGlobalDescribe().get(objectName);
 
         if (obj == null) return res;
 
-        for (Schema.SObjectField f :
-            obj.getDescribe().fields.getMap().values()) {
-
+        for (Schema.SObjectField f : obj.getDescribe().fields.getMap().values()) {
             Schema.DescribeFieldResult d = f.getDescribe();
-            res.add(new FieldInfo(d.getLabel(), d.getName()));
+            
+            // Identify if the field is a reference type (Lookup / Master-Detail)
+            Boolean isLookup = (d.getType() == Schema.DisplayType.REFERENCE);
+            String relName = d.getRelationshipName();
+            String refToName = '';
+
+            // If it's a relationship field, extract its target parent Object API Name
+            if (isLookup && d.getReferenceTo().size() > 0) {
+                refToName = d.getReferenceTo()[0].getDescribe().getName();
+            }
+
+            res.add(new FieldInfo(
+                d.getLabel(), 
+                d.getName(), 
+                isLookup, 
+                relName, 
+                refToName
+            ));
         }
         return res;
     }
@@ -71,9 +93,7 @@ public with sharing class SoqlExplorerController {
         Set<String> fieldSet = new Set<String>(fields);
         fieldSet.add('Id'); // Required for datatable
 
-        String soql =
-            'SELECT ' + String.join(new List<String>(fieldSet), ',') +
-            ' FROM ' + objectName;
+        String soql = 'SELECT ' + String.join(new List<String>(fieldSet), ',') + ' FROM ' + objectName;
 
         if (String.isNotBlank(whereClause)) {
             String lc = whereClause.toLowerCase();
@@ -83,11 +103,9 @@ public with sharing class SoqlExplorerController {
             soql += ' WHERE ' + whereClause;
         }
 
-        soql += ' LIMIT ' + limitSize +
-                ' OFFSET ' + offsetVal;
+        soql += ' LIMIT ' + limitSize + ' OFFSET ' + offsetVal;
 
-        List<SObject> records =
-            Database.query(soql);
+        List<SObject> records = Database.query(soql);
 
         List<Map<String, Object>> rows = new List<Map<String, Object>>();
         for (SObject s : records) {
@@ -232,6 +250,62 @@ public with sharing class SoqlExplorerController {
         escaped = escaped.replace('"', '&quot;');
         escaped = escaped.replace('\'', '&apos;');
         return escaped;
+    }
+
+    @AuraEnabled
+    public static void updatePolymorphicFields(Id parentId, Map<String, Object> fieldMap) {
+        try {
+            // 🟢 Guard against null parentId or payload arguments
+            if (parentId == null) {
+                throw new AuraHandledException('The Parent Record ID argument cannot be null.');
+            }
+            if (fieldMap == null || fieldMap.isEmpty()) {
+                throw new AuraHandledException('The field update map argument cannot be null or empty.');
+            }
+            
+            // Extract target object type dynamically (e.g., "User", "Contact", "Lead")
+            String objectType = parentId.getSObjectType().getDescribe().getName();
+            Schema.SObjectType targetType = Schema.getGlobalDescribe().get(objectType);
+            
+            if (targetType == null) {
+                throw new AuraHandledException('Unsupported object type definition: ' + objectType);
+            }
+            
+            // Dynamically instantiate the correct concrete SObject record layout
+            SObject targetRecord = targetType.newSObject(parentId);
+            Map<String, Schema.SObjectField> sObjectFieldsMap = targetType.getDescribe().fields.getMap();
+            
+            for (String fieldName : fieldMap.keySet()) {
+                if (String.isBlank(fieldName)) {
+                    throw new AuraHandledException('Target field name cannot be blank.');
+                }
+                
+                // 🟢 Case-Insensitive Schema Match Lookup Guard
+                String verifiedFieldName = null;
+                if (sObjectFieldsMap.containsKey(fieldName)) {
+                    verifiedFieldName = fieldName;
+                } else {
+                    // Scan fields case-insensitively to prevent structural mismatches
+                    for (String apiName : sObjectFieldsMap.keySet()) {
+                        if (apiName.toLowerCase() == fieldName.toLowerCase()) {
+                            verifiedFieldName = apiName;
+                            break;
+                        }
+                    }
+                }
+                
+                if (verifiedFieldName != null) {
+                    targetRecord.put(verifiedFieldName, fieldMap.get(fieldName));
+                } else {
+                    throw new AuraHandledException('Field ' + fieldName + ' does not exist on object ' + objectType);
+                }
+            }
+            
+            update targetRecord;
+            
+        } catch (Exception e) {
+            throw new AuraHandledException('Polymorphic Save Engine Failure: ' + e.getMessage());
+        }
     }
 
 }
